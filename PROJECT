@@ -1,0 +1,6 @@
+domain: open-cluster-management.io
+layout:
+- go.kubebuilder.io/v3
+projectName: policy-framework
+repo: github.com/JustinKuli/policy-framework
+version: "3"
