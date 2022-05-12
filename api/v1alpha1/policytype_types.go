@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 //+kubebuilder:validation:MinLength=1
@@ -32,8 +33,6 @@ const (
 	NonCompliant      ComplianceState = "NonCompliant"
 	UnknownCompliancy ComplianceState = "UnknownCompliancy"
 )
-
-const ComplianceConditionType = "Compliant"
 
 // PolicyTypeSpec includes all fields that should be implemented in the spec of
 // all policy types in the policy framework.
@@ -126,6 +125,24 @@ type PolicyType struct {
 	Spec   PolicyTypeSpec   `json:"spec,omitempty"`
 	Status PolicyTypeStatus `json:"status,omitempty"`
 }
+
+//+kubebuilder:object:generate=false
+type PolicyTyper interface {
+	client.Object
+	PolicySpec() *PolicyTypeSpec
+	PolicyStatus() *PolicyTypeStatus
+}
+
+func (p PolicyType) PolicySpec() *PolicyTypeSpec {
+	return &p.Spec
+}
+
+func (p PolicyType) PolicyStatus() *PolicyTypeStatus {
+	return &p.Status
+}
+
+// blank assignment to verify that PolicyType implements PolicyTyper
+var _ PolicyTyper = &PolicyType{}
 
 //+kubebuilder:object:root=true
 
