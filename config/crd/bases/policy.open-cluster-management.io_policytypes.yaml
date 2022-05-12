@@ -33,15 +33,195 @@ spec:
           metadata:
             type: object
           spec:
-            description: PolicyTypeSpec defines the desired state of PolicyType
+            description: PolicyTypeSpec includes all fields that should be implemented
+              in the spec of all policy types in the policy framework.
             properties:
-              foo:
-                description: Foo is an example field of PolicyType. Edit policytype_types.go
-                  to remove/update
+              labelSelector:
+                additionalProperties:
+                  minLength: 1
+                  type: string
+                description: LabelSelector is a map of labels and values for the resources
+                  that the policy should apply to. Not all policy controllers use
+                  this field, but if they do, the resources must match all labels
+                  specified here.
+                type: object
+              namespaceSelector:
+                description: NamepaceSelector indicates which namespaces on the cluster
+                  this policy should apply to, when the policy applies to namespaced
+                  objects.
+                properties:
+                  exclude:
+                    description: Exclude is a list of namespaces the policy should
+                      _not_ apply to. UNIX style wildcards will be expanded, for example
+                      "kube-*" will exclude both "kube-system" and "kube-public".
+                    items:
+                      minLength: 1
+                      type: string
+                    type: array
+                  include:
+                    description: Include is a list of namespaces the policy should
+                      apply to. UNIX style wildcards will be expanded, for example
+                      "kube-*" will include both "kube-system" and "kube-public".
+                    items:
+                      minLength: 1
+                      type: string
+                    type: array
+                required:
+                - include
+                type: object
+              remediationAction:
+                description: RemediationAction indicates what the policy controller
+                  should do when the policy is not compliant. Accepted values include
+                  inform, and enforce. Note that not all policy controllers will attempt
+                  to automatically remediate a policy, even when set to "enforce".
+                enum:
+                - Inform
+                - inform
+                - Enforce
+                - enforce
+                type: string
+              severity:
+                description: 'Severity is how serious the situation is when the policy
+                  is not compliant. Accepted values include: low, medium, high, and
+                  critical.'
+                enum:
+                - low
+                - Low
+                - medium
+                - Medium
+                - high
+                - High
+                - critical
+                - Critical
                 type: string
             type: object
           status:
-            description: PolicyTypeStatus defines the observed state of PolicyType
+            description: PolicyTypeStatus includes fields that are useful for policy
+              types in the policy framework to implement in order to report status.
+            properties:
+              compliant:
+                description: 'ComplianceState indicates whether the policy is compliant
+                  or not. Accepted values include: Compliant, NonCompliant, and UnknownCompliancy'
+                enum:
+                - Compliant
+                - NonCompliant
+                - UnknownCompliancy
+                type: string
+              conditions:
+                description: Conditions represent the latest available observations
+                  of an object's state
+                items:
+                  description: "Condition contains details for one aspect of the current
+                    state of this API Resource. --- This struct is intended for direct
+                    use as an array at the field path .status.conditions.  For example,
+                    type FooStatus struct{ // Represents the observations of a foo's
+                    current state. // Known .status.conditions.type are: \"Available\",
+                    \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge
+                    // +listType=map // +listMapKey=type Conditions []metav1.Condition
+                    `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\"
+                    protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
+                  properties:
+                    lastTransitionTime:
+                      description: lastTransitionTime is the last time the condition
+                        transitioned from one status to another. This should be when
+                        the underlying condition changed.  If that is not known, then
+                        using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: message is a human readable message indicating
+                        details about the transition. This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: observedGeneration represents the .metadata.generation
+                        that the condition was set based upon. For instance, if .metadata.generation
+                        is currently 12, but the .status.conditions[x].observedGeneration
+                        is 9, the condition is out of date with respect to the current
+                        state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: reason contains a programmatic identifier indicating
+                        the reason for the condition's last transition. Producers
+                        of specific condition types may define expected values and
+                        meanings for this field, and whether the values are considered
+                        a guaranteed API. The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                        --- Many .condition.type values are consistent across resources
+                        like Available, but because arbitrary conditions can be useful
+                        (see .node.status.conditions), the ability to deconflict is
+                        important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              relatedObjects:
+                description: RelatedObjects are objects on the cluster that were examined
+                  in order to determine compliance. Often these are objects that cause
+                  a violation, but not always.
+                items:
+                  properties:
+                    compliant:
+                      description: ComplianceState shows the state of enforcement
+                      enum:
+                      - Compliant
+                      - NonCompliant
+                      - UnknownCompliancy
+                      type: string
+                    object:
+                      properties:
+                        apiVersion:
+                          description: 'APIVersion defines the versioned schema of
+                            this representation of an object. Servers should convert
+                            recognized schemas to the latest internal value, and may
+                            reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+                          type: string
+                        kind:
+                          description: 'Kind is a string value representing the REST
+                            resource this object represents. Servers may infer this
+                            from the endpoint the client submits requests to. Cannot
+                            be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+                          type: string
+                        metadata:
+                          description: ObjectMetadata contains the resource metadata
+                            for an object being processed by the policy
+                          properties:
+                            name:
+                              description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names'
+                              type: string
+                            namespace:
+                              description: 'Namespace of the referent. More info:
+                                https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/'
+                              type: string
+                          type: object
+                      type: object
+                    reason:
+                      minLength: 1
+                      type: string
+                  type: object
+                type: array
             type: object
         type: object
     served: true

@@ -17,6 +17,7 @@ limitations under the License.
 // Package v1alpha1 contains API Schema definitions for the policy v1alpha1 API group
 //+kubebuilder:object:generate=true
 //+groupName=policy.open-cluster-management.io
+//+kubebuilder:validation:Optional
 package v1alpha1
 
 import (
