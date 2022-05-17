@@ -1,0 +1,6 @@
+domain: open-cluster-management.io
+layout:
+- go.kubebuilder.io/v3
+projectName: mockpolicy
+repo: github.com/JustinKuli/policy-framework/test/mockpolicy
+version: "3"
