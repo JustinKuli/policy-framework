@@ -1,0 +1,24 @@
+# permissions for end users to edit mockpolicies.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: mockpolicy-editor-role
+rules:
+- apiGroups:
+  - policy.open-cluster-management.io
+  resources:
+  - mockpolicies
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - policy.open-cluster-management.io
+  resources:
+  - mockpolicies/status
+  verbs:
+  - get

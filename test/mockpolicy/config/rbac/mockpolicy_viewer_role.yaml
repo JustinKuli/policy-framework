@@ -1,0 +1,20 @@
+# permissions for end users to view mockpolicies.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: mockpolicy-viewer-role
+rules:
+- apiGroups:
+  - policy.open-cluster-management.io
+  resources:
+  - mockpolicies
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - policy.open-cluster-management.io
+  resources:
+  - mockpolicies/status
+  verbs:
+  - get

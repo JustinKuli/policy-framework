@@ -3,4 +3,14 @@ layout:
 - go.kubebuilder.io/v3
 projectName: mockpolicy
 repo: github.com/JustinKuli/policy-framework/test/mockpolicy
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: open-cluster-management.io
+  group: policy
+  kind: MockPolicy
+  path: github.com/JustinKuli/policy-framework/test/mockpolicy/api/v1alpha1
+  version: v1alpha1
 version: "3"
