@@ -1,0 +1,7 @@
+apiVersion: policy.open-cluster-management.io/v1alpha1
+kind: MockPolicy
+metadata:
+  name: empty-ns-select
+  namespace: default
+spec:
+  namespaceSelector: {}

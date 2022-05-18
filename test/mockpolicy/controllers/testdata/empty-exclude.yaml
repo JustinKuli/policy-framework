@@ -1,0 +1,9 @@
+apiVersion: policy.open-cluster-management.io/v1alpha1
+kind: MockPolicy
+metadata:
+  name: empty-exclude
+  namespace: default
+spec:
+  namespaceSelector:
+    include: ["foo"]
+    exclude: []

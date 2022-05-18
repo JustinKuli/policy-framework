@@ -17,25 +17,21 @@ limitations under the License.
 package v1alpha1
 
 import (
+	framework "github.com/JustinKuli/policy-framework/api/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
 // MockPolicySpec defines the desired state of MockPolicy
 type MockPolicySpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	framework.PolicyTypeSpec `json:",inline"`
 
-	// Foo is an example field of MockPolicy. Edit mockpolicy_types.go to remove/update
+	// Foo is an example field of MockPolicy.
 	Foo string `json:"foo,omitempty"`
 }
 
 // MockPolicyStatus defines the observed state of MockPolicy
 type MockPolicyStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
+	framework.PolicyTypeStatus `json:",inline"`
 }
 
 //+kubebuilder:object:root=true
@@ -49,6 +45,17 @@ type MockPolicy struct {
 	Spec   MockPolicySpec   `json:"spec,omitempty"`
 	Status MockPolicyStatus `json:"status,omitempty"`
 }
+
+func (p MockPolicy) PolicySpec() *framework.PolicyTypeSpec {
+	return &p.Spec.PolicyTypeSpec
+}
+
+func (p MockPolicy) PolicyStatus() *framework.PolicyTypeStatus {
+	return &p.Status.PolicyTypeStatus
+}
+
+// blank assignment to verify that PolicyType implements PolicyTyper
+var _ framework.PolicyTyper = &MockPolicy{}
 
 //+kubebuilder:object:root=true
 

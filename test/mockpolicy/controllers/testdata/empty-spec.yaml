@@ -1,0 +1,6 @@
+apiVersion: policy.open-cluster-management.io/v1alpha1
+kind: MockPolicy
+metadata:
+  name: empty-spec
+  namespace: default
+spec: {}

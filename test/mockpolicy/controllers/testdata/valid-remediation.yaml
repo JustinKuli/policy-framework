@@ -1,0 +1,10 @@
+apiVersion: policy.open-cluster-management.io/v1alpha1
+kind: MockPolicy
+metadata:
+  name: valid-remediation
+  namespace: default
+spec:
+  namespaceSelector:
+    include: ["foo"]
+    exclude: ["kube-*", "openshift*"]
+  remediationAction: "inform"
