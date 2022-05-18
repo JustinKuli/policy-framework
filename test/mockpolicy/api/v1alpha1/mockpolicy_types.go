@@ -32,6 +32,8 @@ type MockPolicySpec struct {
 // MockPolicyStatus defines the observed state of MockPolicy
 type MockPolicyStatus struct {
 	framework.PolicyTypeStatus `json:",inline"`
+
+	Debug string `json:"debug,omitempty"`
 }
 
 //+kubebuilder:object:root=true

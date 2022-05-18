@@ -1,0 +1,14 @@
+apiVersion: policy.open-cluster-management.io/v1alpha1
+kind: MockPolicy
+metadata:
+  name: nstest-example
+  namespace: default
+spec:
+  namespaceSelector:
+    include: ["*"]
+    exclude: ["kube-*", "openshift*"]
+  remediationAction: "inform"
+  severity: "Low"
+  labelSelector:
+    environment: "test"
+  foo: "nstest"

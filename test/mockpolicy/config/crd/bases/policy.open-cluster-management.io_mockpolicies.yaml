@@ -181,6 +181,8 @@ spec:
                   - type
                   type: object
                 type: array
+              debug:
+                type: string
               relatedObjects:
                 description: RelatedObjects are objects on the cluster that were examined
                   in order to determine compliance. Often these are objects that cause
