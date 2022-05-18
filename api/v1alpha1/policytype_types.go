@@ -51,6 +51,7 @@ type PolicyTypeSpec struct {
 
 	// NamepaceSelector indicates which namespaces on the cluster this policy
 	// should apply to, when the policy applies to namespaced objects.
+	//+kubebuilder:validation:Required
 	NamespaceSelector NamespaceSelector `json:"namespaceSelector,omitempty"`
 
 	// LabelSelector is a map of labels and values for the resources that the
@@ -64,6 +65,7 @@ type NamespaceSelector struct {
 	// wildcards will be expanded, for example "kube-*" will include both
 	// "kube-system" and "kube-public".
 	//+kubebuilder:validation:Required
+	//+kubebuilder:validation:MinItems=1
 	Include []NonEmptyString `json:"include,omitempty"`
 
 	// Exclude is a list of namespaces the policy should _not_ apply to. UNIX
